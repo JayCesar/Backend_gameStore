@@ -2,16 +2,18 @@ package com.generation.jaycesargames.model;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-
 @Entity
 @Table(name = "tb_produto")
 public class Game {
@@ -28,13 +30,13 @@ public class Game {
 	@Size(min = 10, max = 1000, message = "O atributo texto deve conter no mínimo 10 e no máxim 1000 caracteres")
 	private String descricao;
 
-	@NotBlank(message = "O atributo preço é obrigatório!")
+	@NotNull(message = "O atributo preço é obrigatório!")
 	@Positive(message = "O preço deve ser positivo!")
 	private BigDecimal preco;
 	
-	/*@ManyToOne
-	@JsonIgnoreProperties("Games")
-	private Categoria categoria;*/
+	@ManyToOne
+	@JsonIgnoreProperties("games")
+	private Categoria categoria;
 
 	// Getters and Setters
 	public Long getId() {
@@ -69,19 +71,12 @@ public class Game {
 		this.preco = preco;
 	}
 
-	/*public Categoria getCategoria() {
+	public Categoria getCategoria() {
 		return categoria;
 	}
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
-	}*/
-
-	
-
-	
-	
-	
-	
+	}
 	
 }

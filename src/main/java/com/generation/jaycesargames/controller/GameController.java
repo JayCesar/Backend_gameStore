@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,7 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.jaycesargames.model.Game;
+import com.generation.jaycesargames.repository.CategoriaRepository;
 import com.generation.jaycesargames.repository.GameRepository;
+
+import jakarta.validation.constraints.NotBlank;
 
 import jakarta.validation.Valid;
 
@@ -27,8 +31,11 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class GameController {
 
-	/*@Autowired
+	@Autowired
 	private GameRepository gameRepository;
+	
+	@Autowired
+	private CategoriaRepository categoriaRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<Game>> getAll(){
@@ -49,13 +56,29 @@ public class GameController {
 	
 	@PostMapping
 	public ResponseEntity<Game> post(@Valid @RequestBody Game game){
-		if (gameRepository.existsById(game.getCategoria().getId()))
+		if (categoriaRepository.existsById(game.getCategoria().getId()))
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(gameRepository.save(game));
 			
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game não existe!", null);
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria não existe!", null);
 	}
-
+	
+	@PutMapping
+	public ResponseEntity<Game> put(@Valid @RequestBody Game game){
+		if (gameRepository.existsById(game.getId())){
+			
+			if (categoriaRepository.existsById(game.getCategoria().getId()))
+				return ResponseEntity.status(HttpStatus.OK)
+						.body(gameRepository.save(game));
+			
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria não existe!", null);
+			
+		}			
+			
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		
+	}
+	
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
@@ -66,6 +89,6 @@ public class GameController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		
 		gameRepository.deleteById(id);				
-	}*/
-	
+	}
+
 }
